@@ -16,27 +16,28 @@ def clean_text(text):
     return cleaned_text
 
 
-def save_post_to_file(poster_name, post_date, post_content, save_directory):
+def save_post_to_file(poster_name, post_date, post_content, project_directory):
     """
-    Save post details to a pickle (.pkl) file in the specified save directory.
+    Save post details to a pickle (.pkl) file in an 'updates' subfolder within the project directory.
     """
+    # Create the 'updates' subfolder within the project directory
+    updates_folder = os.path.join(project_directory, 'updates')
+    if not os.path.exists(updates_folder):
+        os.makedirs(updates_folder)
+
     # Ensure the filename is URL-safe
     safe_poster_name = re.sub(r'[^A-Za-z0-9]+', '_', poster_name.strip().lower())
     safe_date = re.sub(r'[^A-Za-z0-9]+', '_', post_date.strip().lower())
     filename = f'{safe_poster_name}_{safe_date}.pkl'  # Save as .pkl file
 
-    # Create the directory if it doesn't exist
-    if not os.path.exists(save_directory):
-        os.makedirs(save_directory)
-
-    # Save the post content to a pickle file in the specified directory
+    # Save the post content to a pickle file in the 'updates' folder
     post_data = {
         'poster_name': poster_name,
         'post_date': post_date,
         'post_content': post_content
     }
 
-    post_path = os.path.join(save_directory, filename)
+    post_path = os.path.join(updates_folder, filename)
     with open(post_path, 'wb') as f:
         pickle.dump(post_data, f)  # Save the post data using pickle
 
