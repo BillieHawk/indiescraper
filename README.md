@@ -35,7 +35,7 @@ indiescraper is a Python-based tool that scrapes campaign stories and updates fr
 ## Usage
 
 1. Prepare a CSV file with the project details (e.g., `XSIndigegogoProduction.csv`). The CSV should contain:
-    - `ig.id`: Project ID
+    - `id`: Project ID
     - `combined.url`: The URL path for the campaign
 
 2. Update the script with your CSV file path.
