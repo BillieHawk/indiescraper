@@ -72,7 +72,7 @@ if __name__ == "__main__":
     # process_indiegogo_projects(csv_file_path)
 
     # Test scraping for one specific project directly without CSV
-    project_id = str(928347)  # Example project ID
+    project_id = str(999999)  # Example project ID
     project_directory = create_project_directory(project_id)
     funds_data_directory = os.path.join(project_directory, 'funds_data')
 
@@ -87,6 +87,14 @@ if __name__ == "__main__":
     #)
 
     scrape_backerkit(
-        'https://www.backerkit.com/projects/gpd-duo-13-3-inch-dual-oled-screen-laptop#/',
+        'https://www.backerkit.com/projects/livall-pikaboost-2-electrify-your-rides-with-ease',
+        funds_data_directory
+    )
+
+    project_id = str(111111)  # Example project ID
+    project_directory = create_project_directory(project_id)
+    funds_data_directory = os.path.join(project_directory, 'funds_data')
+    scrape_backerkit(
+        'https://www.backerkit.com/projects/onexgpu-2-ultimate-egpu-with-amd-radeon-rx-7800m',
         funds_data_directory
     )
