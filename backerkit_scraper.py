@@ -7,19 +7,17 @@ import os
 import re
 import pandas as pd
 import numpy as np
+import json
+import logging
+from datetime import datetime
 
+logging.basicConfig(level=logging.INFO)
 
 def clean_text(text):
     """
     Cleans the scraped text by replacing non-breaking spaces and other unwanted characters.
     """
     return text.replace('\xa0', ' ').strip()
-
-
-import os
-import pandas as pd
-from datetime import datetime
-
 
 def scrape_funding_progress_on_indiegogo(soup, save_directory):
     """
@@ -42,18 +40,18 @@ def scrape_funding_progress_on_indiegogo(soup, save_directory):
         # Determine the structure based on ongoing or ended status
         if ongoing:
             # Project is ongoing; we expect all columns
-            print("Project is ongoing. Using ongoing data format and removing last 2 rows.")
+            logging.info("Project is ongoing. Using ongoing data format and removing last 2 rows.")
             expected_columns = ['Date', 'Funds Raised', 'Goal', 'Trend', 'Projection Low', 'Projection High', 'Tooltip']
             df_funding_progress = pd.DataFrame(funding_progress_data_list, columns=expected_columns)
 
         else:
             # Project has ended; only 3 columns are expected
-            print("Project has ended. Using ended data format without row removal.")
+            logging.info("Project has ended. Using ended data format without row removal.")
             actual_columns = ['Date', 'Funds Raised', 'Goal']
             df_funding_progress = pd.DataFrame(funding_progress_data_list, columns=actual_columns)
 
         # Process date and numeric columns
-        df_funding_progress['Date'] = pd.to_datetime(df_funding_progress['Date'], errors='coerce', utc=True)
+        df_funding_progress['Date'] = pd.to_datetime(df_funding_progress['Date'], errors='coerce')
         df_funding_progress['Funds Raised'] = pd.to_numeric(df_funding_progress['Funds Raised'], errors='coerce')
         df_funding_progress['Goal'] = pd.to_numeric(df_funding_progress['Goal'], errors='coerce')
 
@@ -81,8 +79,7 @@ def scrape_funding_progress_on_indiegogo(soup, save_directory):
         # Save data to a CSV
         csv_funding_progress_path = os.path.join(save_directory, 'funding_progress_indiegogo.csv')
         df_funding_progress.to_csv(csv_funding_progress_path, index=False)
-        print(f"Funding progress data saved as a CSV file at {csv_funding_progress_path}")
-
+        logging.info(f"Funding progress data saved as a CSV file at {csv_funding_progress_path}")
 
 def scrape_backerkit(campaign_url, save_directory):
     """
@@ -126,7 +123,7 @@ def scrape_backerkit(campaign_url, save_directory):
                 df_funding['Date'] = pd.to_datetime(df_funding['Date'], errors='coerce')
                 csv_funding_path = os.path.join(save_directory, 'daily_funding_indiegogo.csv')
                 df_funding.to_csv(csv_funding_path, index=False)
-                print(f"Daily funding data saved as a CSV file at {csv_funding_path}")
+                logging.info(f"Daily funding data saved as a CSV file at {csv_funding_path}")
 
         # Scrape "Daily Backers on Indiegogo"
         script_tag_backers = soup.find('script', text=re.compile(r'new Chartkick\["ColumnChart"\]\("chart-2"'))
@@ -139,13 +136,13 @@ def scrape_backerkit(campaign_url, save_directory):
                 df_backers['Date'] = pd.to_datetime(df_backers['Date'], errors='coerce')
                 csv_backers_path = os.path.join(save_directory, 'daily_backers_indiegogo.csv')
                 df_backers.to_csv(csv_backers_path, index=False)
-                print(f"Daily backers data saved as a CSV file at {csv_backers_path}")
+                logging.info(f"Daily backers data saved as a CSV file at {csv_backers_path}")
 
         # Scrape "Funding Progress on Indiegogo" using the helper function
         scrape_funding_progress_on_indiegogo(soup, save_directory)
 
     except Exception as e:
-        print(f"Error while fetching the page: {e}")
+        logging.error(f"Error while fetching the page: {e}")
 
     finally:
         # Close the browser

@@ -72,19 +72,9 @@ if __name__ == "__main__":
     # process_indiegogo_projects(csv_file_path)
 
     # Test scraping for one specific project directly without CSV
-    project_id = str(999999)  # Example project ID
+    project_id = str(888888)  # Example project ID
     project_directory = create_project_directory(project_id)
     funds_data_directory = os.path.join(project_directory, 'funds_data')
-
-    #scrape_indiegogo_story(
-    #    'https://www.indiegogo.com/projects/livall-pikaboost-2-electrify-your-rides-with-ease',
-    #    project_directory
-    #)
-
-    #scrape_indiegogo_updates(
-    #    'https://www.indiegogo.com/projects/livall-pikaboost-2-electrify-your-rides-with-ease#/updates/all',
-    #    project_directory
-    #)
 
     scrape_backerkit(
         'https://www.backerkit.com/projects/livall-pikaboost-2-electrify-your-rides-with-ease',
@@ -95,6 +85,6 @@ if __name__ == "__main__":
     project_directory = create_project_directory(project_id)
     funds_data_directory = os.path.join(project_directory, 'funds_data')
     scrape_backerkit(
-        'https://www.backerkit.com/projects/onexgpu-2-ultimate-egpu-with-amd-radeon-rx-7800m',
+        'https://www.backerkit.com/projects/pocket-4-modular-full-featured-handheld-ai-pc#/',
         funds_data_directory
     )
